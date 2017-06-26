@@ -1,17 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>{{ instance.title }}</h1>
+{% extends "base.html" %}
 
-{{ instance.title }}<br>
-{{ instance.content }}<br>
-{{ instance.timestamp }}<br>
-{{ instance.updated }}<br>
-{{ instance.id }}<br>
-<hr>
-</body>
-</html>
+
+{% block head_title %}
+{{ instance.title }} | {{ block.super }}
+{% endblock head_title %}
+
+
+
+{% block content %}
+<div class='col-sm-6 col-sm-offset-3'>
+    {% if instance.image %}
+    <img src=" {{ instance.image.url }}" class="img-responsive"/>
+    {% endif %}
+<h1>{{ title }} <small>{{ instance.timestamp }}</small></h1>
+
+{{ instance.content|linebreaks }}<br/>
+</div>
+
+{% endblock content %}
