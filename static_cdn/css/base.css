@@ -3,10 +3,10 @@ h1 {
 }
 
 .wmd-panel{
-    margin-right: 0px;
-    margin-left: 0px;
+    margin-right: 0px !important;
+    margin-left: 0px !important;
 }
-.wmd-panel{
-    margin-right: 0px;
-    margin-left: 0px;
+
+.comment-reply{
+    display:none;
 }
