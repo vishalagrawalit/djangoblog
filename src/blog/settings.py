@@ -14,13 +14,13 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+# BASE_DIR = "/Users/jmitch/desktop/blog/src/"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'mk!p@ta_i35c1cp8vaqk!7jq=6cg4s+t6u#_^ji4=vrhmaoeih'
+SECRET_KEY = 'sm@g)(fbwdh5wc*xe@j++m9rh^uza5se9a57c5ptwkg*b@ki0x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,16 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # third-party apps
-
-    'pagedown',
-    'markdown_deux',
+    # third party
     'crispy_forms',
-    
+    'markdown_deux',
+    'pagedown',
+
     # local apps
     'comments',
     'posts',
+
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
@@ -62,6 +61,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+LOGIN_URL = "/login/"
 ROOT_URLCONF = 'blog.urls'
 
 TEMPLATES = [
@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME':  os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -132,6 +132,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     #'/var/www/static/',
@@ -139,5 +140,18 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn")
 
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
+
+
+
+
+
+
+
+
+
+
+
+
+

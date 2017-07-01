@@ -1,5 +1,5 @@
 try:
-    from urllib.parse import quote_plus  # python 3
+    from urllib.parse import quote_plus
 except:
     pass
 
@@ -38,7 +38,7 @@ def post_create(request):
 
 def post_detail(request, slug=None):
     instance = get_object_or_404(Post, slug=slug)
-    if instance.draft:
+    if instance.publish > timezone.now().date() or instance.draft:
         if not request.user.is_staff or not request.user.is_superuser:
             raise Http404
     share_string = quote_plus(instance.content)
@@ -48,13 +48,12 @@ def post_detail(request, slug=None):
         "object_id": instance.id
     }
     form = CommentForm(request.POST or None, initial=initial_data)
-    if form.is_valid():
+    if form.is_valid() and request.user.is_authenticated():
         c_type = form.cleaned_data.get("content_type")
         content_type = ContentType.objects.get(model=c_type)
         obj_id = form.cleaned_data.get('object_id')
         content_data = form.cleaned_data.get("content")
         parent_obj = None
-
         try:
             parent_id = int(request.POST.get("parent_id"))
         except:
@@ -70,7 +69,7 @@ def post_detail(request, slug=None):
             content_type=content_type,
             object_id=obj_id,
             content=content_data,
-            parent=parent_obj
+            parent=parent_obj,
         )
         return HttpResponseRedirect(new_comment.content_object.get_absolute_url())
 

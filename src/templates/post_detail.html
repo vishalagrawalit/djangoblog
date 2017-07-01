@@ -1,10 +1,17 @@
 {% extends "base.html" %}
+{% load urlify %}
 {% load crispy_forms_tags %}
 
 
 {% block head_title %}
 {{ instance.title }} | {{ block.super }}
 {% endblock head_title %}
+
+
+ {% block post_detail_link %}
+  <li><a href='{{ instance.get_update_url }}'>Edit {{ instance.title }}</a></li>
+  {% endblock %}
+
 
 
 
@@ -15,6 +22,13 @@
     {% endif %}
 <h1>{{ title }} <small>{% if instance.draft %}<span style='color:red;'>Draft</span>
     {% endif %}{{ instance.publish }}</small></h1>
+
+<!-- {% if instance.read_time|time:"i" <= "01" %}
+< 1 minute {% else %}{{ instance.read_time|time:"i" }} minutes
+{% endif %} -->
+
+
+<p>Read time: {% if instance.read_time <= 1 %} < 1 Minute {% else %}{{ instance.read_time }} minutes {% endif %}</p>
 {% if instance.user.get_full_name %}
 <p>Author: {{ instance.user.get_full_name }}</p>
 {% endif %}
@@ -37,19 +51,24 @@
     <div>
 
         <p class='lead'>Comments</p>
+        {% if request.user.is_authenticated %}
         <form method="POST" action="."> {% csrf_token %}
             {{ comment_form|crispy }}
             <input type='submit' value='Post comment' class='btn btn-default'>
         </form>
+        {% else %}
+        <p>You must login to comment </p>
+        {% endif %}
         <hr/>
         {% for comment in comments %}
 
         <blockquote>
           <p>{{ comment.content }}</p>
-          <footer>via {{ comment.user.get_full_name }} | {{ comment.timestamp|timesince }} ago |
-              {% if comment.children.count >= 1 and comment.children.count < 2 %}{{ comment.children.count }} Comment | {% endif %}
-              {% if comment.children.count > 1 %}{{ comment.children.count }} Comments | {% endif %}
-              <a class='comment-reply-btn' href='#'>Reply</a>
+          <footer>via {{ comment.user }} | {{ comment.timestamp|timesince }} ago |
+              {% if comment.children.count > 0 %}{{ comment.children.count }} Comment
+              {% if comment.children.count > 1 %}s{% endif %} | {% endif %}
+              <a class='comment-reply-btn' href='#'>Reply</a> |
+              <a class='' href='{{ comment.get_absolute_url }}'>Thread</a>
           </footer>
           <div class='comment-reply' style="display:none;">
               {% for child_comment in comment.children %}
@@ -58,12 +77,15 @@
                 <footer>via {{ child_comment.user }} | {{ child_comment.timestamp|timesince }} ago</footer>
                 </blockquote>
              {% endfor %}
-
+             {% if request.user.is_authenticated %}
             <form method="POST" action="."> {% csrf_token %}
                 {{ comment_form|crispy }}
                 <input type='hidden' name='parent_id' value='{{ comment.id }}'>
                 <input type='submit' value='Reply' class='btn btn-default'>
             </form>
+            {% else %}
+        <p>You must login to comment </p>
+        {% endif %}
         </div>
 
         </blockquote>
@@ -71,9 +93,6 @@
         <hr/>
         {% endfor %}
     </div>
-
-
-
 
 </div>
 </div>
